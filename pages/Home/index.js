@@ -6,13 +6,16 @@ import Grid from '@mui/material/Grid';
 
 import NewsCard from '@/components/NewsCard';
 import SingleNewsModal from '@/components/SingleNewsModal';
-import { getLatestNews } from '@/utils/news_api';
+import SearchBar from '@/components/SearchBar';
+import { searchNews, getNewsByCategory } from '@/utils/news_api';
 
 const GridItem = (props) => (
 	<Grid item lg={3}>
 		<NewsCard {...props}></NewsCard>
 	</Grid>
 );
+
+let originalNewsList = [];
 
 const Home = () => {
 	const [news, setNews] = useState([]);
@@ -43,13 +46,29 @@ const Home = () => {
 		localStorage.setItem('readLaterNews', JSON.stringify(readLaterNews));
 	};
 
-	useEffect(() => {
-		getLatestNews()
+	const handleSearch = (searchString) => {
+		if (searchString === '') {
+			setNews(originalNewsList);
+			return;
+		}
+
+		searchNews(searchString)
 			.then((data) => {
 				setNews(data.articles);
 			})
 			.catch((error) => {
-				console.error('🚀 -> file: Home.js:12 -> getLatestNews -> error', error);
+				console.error('🚀 -> file: index.js:61 -> handleSearch -> error', error);
+			});
+	};
+
+	useEffect(() => {
+		getNewsByCategory('')
+			.then((data) => {
+				originalNewsList = data.articles;
+				setNews(data.articles);
+			})
+			.catch((error) => {
+				console.error('🚀 -> file: Home.js:12 -> searchNews -> error', error);
 			});
 	}, []);
 
@@ -57,7 +76,8 @@ const Home = () => {
 		<>
 			<NavbarWrapper>
 				<Container sx={{ marginTop: '30px', marginBottom: '80px' }} maxWidth='xl'>
-					<Grid container rowSpacing={5} columnSpacing={3}>
+					<SearchBar handleSearch={handleSearch}></SearchBar>
+					<Grid container rowSpacing={5} columnSpacing={3} sx={{ marginTop: '0px' }}>
 						{news?.length > 0 &&
 							news.map(({ urlToImage, title, publishedAt }, newsItemIndex) => (
 								<GridItem
@@ -73,11 +93,13 @@ const Home = () => {
 					</Grid>
 				</Container>
 			</NavbarWrapper>
-			<SingleNewsModal
-				setShowModal={setShowModal}
-				isOpen={showModal}
-				newsItem={news[newsItemIndex]}
-			></SingleNewsModal>
+			{news?.length > 0 && (
+				<SingleNewsModal
+					setShowModal={setShowModal}
+					isOpen={showModal}
+					newsItem={news[newsItemIndex]}
+				></SingleNewsModal>
+			)}
 		</>
 	);
 };
