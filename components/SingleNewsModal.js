@@ -7,10 +7,13 @@ import Container from '@mui/material/Container';
 import Image from 'next/image';
 
 const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
+	console.log(
+		'🚀 -> file: SingleNewsModal.js:10 -> SingleNewsModal -> newsItem',
+		newsItem
+	);
 	if (!newsItem) return null;
 	return (
 		<Modal
-			// anchor='bottom'
 			open={isOpen}
 			onClose={() => {
 				setShowModal(false);
@@ -45,18 +48,22 @@ const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 					</Typography>
 				)}
 				<Typography gutterBottom variant='body2' color='text.secondary'>
-					{new Date(newsItem.publishedAt).toDateString()}
+					{new Date(newsItem?.publishedAt).toDateString()}
 				</Typography>
-				<Image
-					src={newsItem.urlToImage}
-					width={750}
-					height={750}
-					alt='News Item Image'
-				></Image>
+
+				{newsItem?.urlToImage && (
+					<Image
+						src={newsItem?.urlToImage}
+						width={750}
+						height={750}
+						alt='News Item Image'
+					></Image>
+				)}
+
 				<Typography id='modal-modal-description' sx={{ mt: 2 }}>
 					{newsItem?.content?.substring(0, 195) ||
-						newsItem?.description.substring(0, 130)}{' '}
-					<a target='_blank' style={{ color: 'blue' }} href={newsItem.url}>
+						newsItem?.description?.substring(0, 130)}{' '}
+					<a target='_blank' style={{ color: 'blue' }} href={newsItem?.url}>
 						continue reading...
 					</a>
 				</Typography>

@@ -46,7 +46,12 @@ const NewsCard = ({
 			sx={{ borderRadius: 1 }}
 			elevation={5}
 		>
-			<CardMedia component='img' height='250' image={imageUrl} alt='news image' />
+			<CardMedia
+				component='img'
+				height='250'
+				image={imageUrl || 'https://via.placeholder.com/450x450?text=No+Image'}
+				alt='news image'
+			/>
 			<CardContent sx={{ maxHeight: '450' }}>
 				<Typography ref={textRef} gutterBottom variant='h5' component='div'>
 					{/* {truncatedTitle} */}
