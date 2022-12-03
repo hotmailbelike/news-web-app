@@ -1,21 +1,13 @@
-import { useState } from 'react';
 import Input from '@mui/material/Input';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import Search from '@mui/icons-material/Search';
 
-const SearchBar = ({ handleSearch }) => {
-	const [searchQuery, setSearchQuery] = useState('');
-
+const SearchBar = ({ handleSearch, clearSearch, searchQuery, setSearchQuery }) => {
 	const handleSubmitSearch = (e) => {
 		e.preventDefault();
-		handleSearch(searchQuery);
-	};
-
-	const clearSearch = () => {
-		handleSearch('');
-		setSearchQuery('');
+		handleSearch();
 	};
 
 	return (
@@ -43,7 +35,7 @@ const SearchBar = ({ handleSearch }) => {
 				<Button
 					disabled={searchQuery === '' ? true : false}
 					type='submit'
-					sx={{ ml: 2, fontSize: '14px' }}
+					sx={{ ml: 2, fontSize: '14px', backgroundColor: '#007849' }}
 					variant='contained'
 					color='success'
 				>
@@ -52,7 +44,7 @@ const SearchBar = ({ handleSearch }) => {
 				{searchQuery !== '' && (
 					<Button
 						onClick={clearSearch}
-						sx={{ ml: 2, fontSize: '14px' }}
+						sx={{ ml: 2, fontSize: '14px', backgroundColor: '#b82601' }}
 						variant='contained'
 						color='error'
 					>

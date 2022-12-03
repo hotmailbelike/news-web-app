@@ -7,10 +7,6 @@ import Container from '@mui/material/Container';
 import Image from 'next/image';
 
 const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
-	console.log(
-		'🚀 -> file: SingleNewsModal.js:10 -> SingleNewsModal -> newsItem',
-		newsItem
-	);
 	if (!newsItem) return null;
 	return (
 		<Modal
