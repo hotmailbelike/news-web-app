@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import NavbarWrapper from '@/components/NavbarWrapper';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import NewsCard from '@/components/NewsCard';
 import SingleNewsModal from '@/components/SingleNewsModal';
@@ -24,6 +25,10 @@ const Home = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedNewsCategory, setSelectedNewsCategory] = useState('General');
 	const [searchQuery, setSearchQuery] = useState('');
+	const [hideTabBar, setHideTabBar] = useState(false);
+
+	const [pageNumber, setPageNumber] = useState(1);
+	const [canLoadMore, setCanLoadMore] = useState(true);
 
 	const handleOpenSingleNewsItem = (newsIndex) => {
 		setShowModal(true);
@@ -50,6 +55,8 @@ const Home = () => {
 	};
 
 	const handleSearch = () => {
+		setHideTabBar(true);
+
 		searchNews(searchQuery)
 			.then((data) => {
 				setNews(data.articles);
@@ -60,21 +67,43 @@ const Home = () => {
 	};
 
 	const clearSearch = () => {
+		setHideTabBar(false);
+
 		setNews(originalNewsList);
 
 		setSearchQuery('');
 	};
 
-	useEffect(() => {
-		getNewsByCategory(selectedNewsCategory)
+	const callGetNewsByCategoryAPI = (pageNumber) => {
+		getNewsByCategory(selectedNewsCategory, pageNumber)
 			.then((data) => {
 				originalNewsList = data.articles;
 
-				setNews(data.articles);
+				if (pageNumber === 1) {
+					setNews(data.articles);
+				} else {
+					setNews((prevNews) => [...prevNews, ...data.articles]);
+				}
+
+				if (data.articles.length < 20) {
+					setCanLoadMore(false);
+				} else {
+					setPageNumber(() => pageNumber + 1);
+				}
 			})
 			.catch((error) => {
-				console.error('🚀 -> file: Home.js:12 -> searchNews -> error', error);
+				console.error('🚀 -> file: Home.js:12 -> getNewsByCategory -> error', error);
 			});
+	};
+
+	const paginateNews = () => {
+		if (canLoadMore) callGetNewsByCategoryAPI(pageNumber);
+	};
+
+	useEffect(() => {
+		setCanLoadMore(true);
+		setPageNumber(1);
+		callGetNewsByCategoryAPI(1);
 	}, [selectedNewsCategory]);
 
 	return (
@@ -88,24 +117,38 @@ const Home = () => {
 						searchQuery={searchQuery}
 					></SearchBar>
 					<div style={{ marginTop: '30px' }}></div>
-					<TabBar
-						selectedTab={selectedNewsCategory}
-						setSelectedTab={setSelectedNewsCategory}
-					></TabBar>
-					<Grid container rowSpacing={5} columnSpacing={3} sx={{ marginTop: '0px' }}>
-						{news?.length > 0 &&
-							news.map(({ urlToImage, title, publishedAt }, newsItemIndex) => (
-								<GridItem
-									key={newsItemIndex}
-									handleOpenSingleNewsItem={handleOpenSingleNewsItem}
-									imageUrl={urlToImage}
-									title={title}
-									newsItemIndex={newsItemIndex}
-									date={publishedAt}
-									handleReadLater={handleReadLater}
-								></GridItem>
-							))}
-					</Grid>
+					{!hideTabBar && (
+						<TabBar
+							selectedTab={selectedNewsCategory}
+							setSelectedTab={setSelectedNewsCategory}
+						></TabBar>
+					)}
+					<InfiniteScroll
+						dataLength={news.length}
+						next={paginateNews}
+						hasMore={canLoadMore}
+						loader={<h4>Loading...</h4>}
+					>
+						<Grid
+							container
+							rowSpacing={5}
+							columnSpacing={3}
+							sx={{ marginTop: '0px', marginBottom: '5px' }}
+						>
+							{news?.length > 0 &&
+								news.map(({ urlToImage, title, publishedAt }, newsItemIndex) => (
+									<GridItem
+										key={newsItemIndex}
+										handleOpenSingleNewsItem={handleOpenSingleNewsItem}
+										imageUrl={urlToImage}
+										title={title}
+										newsItemIndex={newsItemIndex}
+										date={publishedAt}
+										handleReadLater={handleReadLater}
+									></GridItem>
+								))}
+						</Grid>
+					</InfiniteScroll>
 				</Container>
 			</NavbarWrapper>
 			{news?.length > 0 && (

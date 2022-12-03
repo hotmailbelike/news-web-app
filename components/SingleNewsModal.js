@@ -22,7 +22,7 @@ const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 					flexDirection: 'column',
 					p: 4,
 					backgroundColor: 'white',
-					maxWidth: '500',
+					maxWidth: '400px',
 					width: 800,
 					marginLeft: 'auto',
 					marginRight: 'auto',
@@ -49,7 +49,8 @@ const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 
 				{newsItem?.urlToImage && (
 					<Image
-						src={newsItem?.urlToImage}
+						style={{ maxWidth: '100%' }}
+						src={newsItem.urlToImage}
 						width={750}
 						height={750}
 						alt='News Item Image'

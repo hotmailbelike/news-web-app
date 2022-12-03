@@ -20,10 +20,10 @@ const searchNews = async (searchString) => {
 	}
 };
 
-const getNewsByCategory = async (category) => {
+const getNewsByCategory = async (category, pageNumber) => {
 	try {
 		let res = await fetch(
-			`https://newsapi.org/v2/top-headlines?country=us&sortBy=popularity&category=${category}&apiKey=${newsApiToken}&pageSize=20`
+			`https://newsapi.org/v2/top-headlines?country=us&sortBy=popularity&category=${category}&apiKey=${newsApiToken}&pageSize=20&page=${pageNumber}`
 		);
 
 		res = await res.json();

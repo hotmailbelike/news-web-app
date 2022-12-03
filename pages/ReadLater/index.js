@@ -56,7 +56,7 @@ const ReadLater = () => {
 		<>
 			<NavbarWrapper>
 				<Container sx={{ marginTop: '30px', marginBottom: '80px' }} maxWidth='xl'>
-					<Grid container rowSpacing={5} columnSpacing={3}>
+					<Grid container rowSpacing={5} columnSpacing={3} sx={{ marginBottom: '5px' }}>
 						{readLaterNews?.length > 0 &&
 							readLaterNews.map(({ urlToImage, title, publishedAt }, newsItemIndex) => (
 								<GridItem
