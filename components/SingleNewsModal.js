@@ -8,6 +8,13 @@ import Image from 'next/image';
 
 const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 	if (!newsItem) return null;
+
+	let cardWidth = '50%';
+
+	if (window?.innerWidth <= 768) {
+		cardWidth = '80%';
+	}
+
 	return (
 		<Modal
 			open={isOpen}
@@ -22,14 +29,15 @@ const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 					flexDirection: 'column',
 					p: 4,
 					backgroundColor: 'white',
-					maxWidth: '400px',
-					width: 800,
+
+					width: cardWidth,
 					marginLeft: 'auto',
 					marginRight: 'auto',
 					marginTop: '50px',
 					marginBottom: '50px',
 					overflowX: 'hidden',
-					maxHeight: '800px',
+					overflowY: 'auto',
+					height: '80%',
 				}}
 			>
 				<Typography gutterBottom variant='h5' component='div'>
@@ -48,13 +56,12 @@ const SingleNewsModal = ({ isOpen, setShowModal, newsItem }) => {
 				</Typography>
 
 				{newsItem?.urlToImage && (
-					<Image
-						style={{ maxWidth: '100%' }}
+					<img
 						src={newsItem.urlToImage}
-						width={750}
-						height={750}
+						width={'100%'}
+						height={'100%'}
 						alt='News Item Image'
-					></Image>
+					></img>
 				)}
 
 				<Typography id='modal-modal-description' sx={{ mt: 2 }}>

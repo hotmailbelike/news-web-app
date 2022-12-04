@@ -15,7 +15,7 @@ import Spinner from '@/components/Spinner';
 let originalNewsList = [];
 
 const GridItem = (props) => (
-	<Grid item lg={3}>
+	<Grid item lg={3} md={6} sm={6}>
 		<NewsCard {...props}></NewsCard>
 	</Grid>
 );
