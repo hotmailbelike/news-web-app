@@ -1,9 +1,9 @@
 const newsApiToken = '262fb595c4aa4a41985245b3f3eb6306';
 
-const searchNews = async (searchString) => {
+const searchNews = async (searchString, pageNumber) => {
 	try {
 		let res = await fetch(
-			`https://newsapi.org/v2/everything?sortBy=popularity&q=${searchString}&apiKey=${newsApiToken}&pageSize=20`
+			`https://newsapi.org/v2/everything?sortBy=popularity&searchIn=title&q=${searchString}&apiKey=${newsApiToken}&pageSize=20&page=${pageNumber}`
 		);
 
 		res = await res.json();

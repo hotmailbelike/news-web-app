@@ -22,7 +22,7 @@ const NewsCard = ({
 		typeof isInReadLater == undefined ? false : isInReadLater
 	);
 
-	let truncatedTitle = title.substring(0, 49) + '...';
+	let truncatedTitle = title?.substring(0, 49) + '...';
 
 	useEffect(() => {
 		let readLaterNews = localStorage.getItem('readLaterNews');

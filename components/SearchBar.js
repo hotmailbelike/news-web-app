@@ -7,7 +7,7 @@ import Search from '@mui/icons-material/Search';
 const SearchBar = ({ handleSearch, clearSearch, searchQuery, setSearchQuery }) => {
 	const handleSubmitSearch = (e) => {
 		e.preventDefault();
-		handleSearch();
+		handleSearch(1);
 	};
 
 	return (

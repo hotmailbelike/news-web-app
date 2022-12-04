@@ -54,31 +54,11 @@ const Home = () => {
 		localStorage.setItem('readLaterNews', JSON.stringify(readLaterNews));
 	};
 
-	const handleSearch = () => {
+	const handleSearch = (pageNumber) => {
 		setHideTabBar(true);
 
-		searchNews(searchQuery)
+		searchNews(searchQuery, pageNumber)
 			.then((data) => {
-				setNews(data.articles);
-			})
-			.catch((error) => {
-				console.error('🚀 -> file: index.js:61 -> handleSearch -> error', error);
-			});
-	};
-
-	const clearSearch = () => {
-		setHideTabBar(false);
-
-		setNews(originalNewsList);
-
-		setSearchQuery('');
-	};
-
-	const callGetNewsByCategoryAPI = (pageNumber) => {
-		getNewsByCategory(selectedNewsCategory, pageNumber)
-			.then((data) => {
-				originalNewsList = data.articles;
-
 				if (pageNumber === 1) {
 					setNews(data.articles);
 				} else {
@@ -88,6 +68,40 @@ const Home = () => {
 				if (data.articles.length < 20) {
 					setCanLoadMore(false);
 				} else {
+					setCanLoadMore(true);
+					setPageNumber(() => pageNumber + 1);
+				}
+			})
+			.catch((error) => {
+				console.error('🚀 -> file: index.js:61 -> handleSearch -> error', error);
+			});
+	};
+
+	const clearSearch = () => {
+		setHideTabBar(false);
+
+		setCanLoadMore(true);
+		setPageNumber(2);
+
+		setNews(originalNewsList);
+
+		setSearchQuery('');
+	};
+
+	const callGetNewsByCategoryAPI = (pageNumber) => {
+		getNewsByCategory(selectedNewsCategory, pageNumber)
+			.then((data) => {
+				if (pageNumber === 1) {
+					setNews(data.articles);
+					originalNewsList = data.articles;
+				} else {
+					setNews((prevNews) => [...prevNews, ...data.articles]);
+				}
+
+				if (data.articles.length < 20) {
+					setCanLoadMore(false);
+				} else {
+					setCanLoadMore(true);
 					setPageNumber(() => pageNumber + 1);
 				}
 			})
@@ -97,7 +111,9 @@ const Home = () => {
 	};
 
 	const paginateNews = () => {
-		if (canLoadMore) callGetNewsByCategoryAPI(pageNumber);
+		if (canLoadMore) {
+			hideTabBar ? handleSearch(pageNumber) : callGetNewsByCategoryAPI(pageNumber);
+		}
 	};
 
 	useEffect(() => {
