@@ -1,4 +1,5 @@
-const newsApiToken = '262fb595c4aa4a41985245b3f3eb6306';
+// const newsApiToken = '262fb595c4aa4a41985245b3f3eb6306';
+const newsApiToken = 'c2d165a24e81452f80010a3581da2733';
 
 const searchNews = async (searchString, pageNumber) => {
 	try {

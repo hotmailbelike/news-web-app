@@ -10,6 +10,7 @@ import SingleNewsModal from '@/components/SingleNewsModal';
 import SearchBar from '@/components/SearchBar';
 import TabBar from '@/components/TabBar';
 import { searchNews, getNewsByCategory } from '@/utils/news_api';
+import Spinner from '@/components/Spinner';
 
 let originalNewsList = [];
 
@@ -29,6 +30,7 @@ const Home = () => {
 
 	const [pageNumber, setPageNumber] = useState(1);
 	const [canLoadMore, setCanLoadMore] = useState(true);
+	const [loading, setLoading] = useState(true);
 
 	const handleOpenSingleNewsItem = (newsIndex) => {
 		setShowModal(true);
@@ -56,9 +58,16 @@ const Home = () => {
 
 	const handleSearch = (pageNumber) => {
 		setHideTabBar(true);
+		if (pageNumber === 1) setLoading(true);
 
 		searchNews(searchQuery, pageNumber)
 			.then((data) => {
+				if (data.error) {
+					setLoading(false);
+					setCanLoadMore(false);
+
+					return setNews([{ title: data.error }]);
+				}
 				if (pageNumber === 1) {
 					setNews(data.articles);
 				} else {
@@ -72,8 +81,10 @@ const Home = () => {
 					setPageNumber(() => pageNumber + 1);
 				}
 			})
+			.then(() => setLoading(false))
 			.catch((error) => {
 				console.error('🚀 -> file: index.js:61 -> handleSearch -> error', error);
+				setLoading(false);
 			});
 	};
 
@@ -89,8 +100,16 @@ const Home = () => {
 	};
 
 	const callGetNewsByCategoryAPI = (pageNumber) => {
+		if (pageNumber === 1) setLoading(true);
+
 		getNewsByCategory(selectedNewsCategory, pageNumber)
 			.then((data) => {
+				if (data.error) {
+					setLoading(false);
+					setCanLoadMore(false);
+
+					return setNews([{ title: data.error }]);
+				}
 				if (pageNumber === 1) {
 					setNews(data.articles);
 					originalNewsList = data.articles;
@@ -105,8 +124,10 @@ const Home = () => {
 					setPageNumber(() => pageNumber + 1);
 				}
 			})
+			.then(() => setLoading(false))
 			.catch((error) => {
 				console.error('🚀 -> file: Home.js:12 -> getNewsByCategory -> error', error);
+				setLoading(false);
 			});
 	};
 
@@ -121,6 +142,17 @@ const Home = () => {
 		setPageNumber(1);
 		callGetNewsByCategoryAPI(1);
 	}, [selectedNewsCategory]);
+
+	if (loading)
+		return (
+			<NavbarWrapper>
+				<Spinner
+					message={
+						hideTabBar ? 'Searching...' : `Fetching ${selectedNewsCategory} news...`
+					}
+				></Spinner>
+			</NavbarWrapper>
+		);
 
 	return (
 		<>
@@ -143,7 +175,8 @@ const Home = () => {
 						dataLength={news.length}
 						next={paginateNews}
 						hasMore={canLoadMore}
-						loader={<h4>Loading...</h4>}
+						// loader={<h4>Loading...</h4>}
+						loader={<Spinner message={'Fetching more news...'}></Spinner>}
 					>
 						<Grid
 							container

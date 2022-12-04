@@ -6,6 +6,7 @@ import NewsCard from '@/components/NewsCard';
 import SingleNewsModal from '@/components/SingleNewsModal';
 import Typography from '@mui/material/Typography';
 import { getLatestNews } from '@/utils/news_api';
+import Spinner from '@/components/Spinner';
 
 const GridItem = (props) => (
 	<Grid item lg={3}>
@@ -17,6 +18,7 @@ const ReadLater = () => {
 	const [readLaterNews, setReadLaterNews] = useState([]);
 	const [newsItemIndex, setNewsItemIndex] = useState(-1);
 	const [showModal, setShowModal] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const handleOpenSingleNewsItem = (newsIndex) => {
 		setShowModal(true);
@@ -41,7 +43,16 @@ const ReadLater = () => {
 			localReadLaterNews = [];
 		}
 		setReadLaterNews(localReadLaterNews);
+		setLoading(false);
 	}, []);
+
+	if (loading) {
+		return (
+			<NavbarWrapper>
+				<Spinner message={'Loading saved news...'}></Spinner>
+			</NavbarWrapper>
+		);
+	}
 
 	if (readLaterNews.length === 0)
 		return (
