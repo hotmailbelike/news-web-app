@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Search from '@mui/icons-material/Search';
+import Grid from '@mui/material/Grid';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import BusinessIcon from '@mui/icons-material/Business';
@@ -44,24 +44,19 @@ const Tab = ({ label, leftIcon, setSelectedTab, selectedTab }) => {
 
 const TabBar = ({ selectedTab, setSelectedTab }) => {
 	return (
-		<Box
-			sx={{
-				display: 'flex',
-				flexDirection: 'row',
-				justifyContent: 'space-evenly',
-				alignItems: 'center',
-			}}
-		>
+		<Grid container rowSpacing={2} sx={{ marginLeft: '22%', width: '60%' }}>
 			{tabInfos.map((tabInfo, tabInfoIndex) => (
-				<Tab
-					key={tabInfoIndex}
-					label={tabInfo.label}
-					leftIcon={tabInfo.leftIcon}
-					setSelectedTab={setSelectedTab}
-					selectedTab={selectedTab}
-				></Tab>
+				<Grid item key={tabInfoIndex} lg={3} md={3} sm={6} xs={12}>
+					<Tab
+						key={tabInfoIndex}
+						label={tabInfo.label}
+						leftIcon={tabInfo.leftIcon}
+						setSelectedTab={setSelectedTab}
+						selectedTab={selectedTab}
+					></Tab>
+				</Grid>
 			))}
-		</Box>
+		</Grid>
 	);
 };
 
