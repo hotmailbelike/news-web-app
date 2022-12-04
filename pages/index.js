@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function Home() {
 	const router = useRouter();
 
-	return router.push('/Home');
+	useEffect(() => {
+		router.push('/Home');
+	}, []);
+
+	return;
 }
