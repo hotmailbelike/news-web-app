@@ -9,7 +9,7 @@ import { getLatestNews } from '@/utils/news_api';
 import Spinner from '@/components/Spinner';
 
 const GridItem = (props) => (
-	<Grid item lg={3}>
+	<Grid item lg={3} md={6} sm={6}>
 		<NewsCard {...props}></NewsCard>
 	</Grid>
 );
